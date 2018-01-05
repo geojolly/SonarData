@@ -122,8 +122,17 @@ training_step = tf.train.GradientDescentOptimizer(learning_rate).minimize(cost_f
 
 sess = tf.Session()
 sess.run(init)
+saver.restore(sess,model_path)
 
+prediction = tf.argmax(y,1)
+correct_prediction = tf.equal(prediction, tf.argmax(y_,1))
+accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
+print( "O means Mine and 1 means Rock")
+for i in range(93,101):
+    prediction_run = sess.run(prediction, feed_dict= {x: X[i].reshape(1,60)})
+    accuracy_run =  sess.run(accuracy,feed_dict={x: X[i].reshape(1,60),y_:train_y})
+    print ("Orginal Class:", y[i], "Predicted Values:", prediction_run)
 #calculate the cost and the accuracy for each epoch
 
 mse_history = []
